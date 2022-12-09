@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 #Build stage
 stages:
@@ -17,7 +17,7 @@ stages:
         displayName: Build job
         steps:
         - task: Maven@3
-          displayName: 'pom file'
+          displayName: maven pom file
           inputs:
             mavenPomFile: 'app/pom.xml'
             publishJUnitResults: true
@@ -29,7 +29,7 @@ stages:
             sonarQubeRunAnalysis: false
 
         - task: CopyFiles@2
-          displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+          displayName: 'Copy Files to target'
           inputs:
             SourceFolder: '$(system.defaultworkingdirectory)'
             Contents: '**/app/gradle/wrapper/gradle-wrapper.jar'
@@ -37,4 +37,25 @@ stages:
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Artifact: drop'
           inputs:
-            PathtoPublish: '$(build.artifactstagingdirectory)'
+            PathtoPublish: '$(Build.artifactstagingdirectory)'
+
+#Deploy stage
+  - stage: "Deploy"
+    jobs:
+      - job: "Deploy"
+        displayName: Deploy Job
+        steps:
+         - task: DownloadBuildArtifacts@1
+           displayName: Download Artifact
+           inputs:
+              buildType: 'current'
+              downloadType: 'specific'
+              downloadPath: '$(System.ArtifactsDirectory)'
+         - task: AzureRmWebAppDeployment@4
+           displayName:  Web app Deploy
+           inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Sathvik Azure'
+              appType: 'webApp'
+              WebAppName: 'Webapp-eus-002'
+              packageForLinux:  $(Build.ArtifactStagingDirectory)'
