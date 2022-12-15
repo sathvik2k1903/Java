@@ -58,4 +58,4 @@ stages:
               azureSubscription: 'Sathvik Azure'
               appType: 'webApp'
               WebAppName: 'Webapp-eus-002'
-              packageForLinux: '$(Build.ArtifactStagingDirectory)'
+              packageForLinux: '$(System.DefaultWorkingDirectory)/_Java_Classic/drop/app/gradle/wrapper/gradle-wrapper.jar'
