@@ -35,9 +35,9 @@ stages:
             Contents: '**/app/gradle/wrapper/gradle-wrapper.jar'
             TargetFolder: '$(build.artifactstagingdirectory)'
         - task: PublishBuildArtifacts@1
-          displayName: 'Publish Artifact: drop'
+          displayName: ' drop'
           inputs:
-            PathtoPublish: '$(build.artifactstagingdirectory)'
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
 #Deploy stage
   - stage: "Deploy"
@@ -58,4 +58,4 @@ stages:
               azureSubscription: 'Sathvik Azure'
               appType: 'webApp'
               WebAppName: 'Webapp-eus-002'
-              packageForLinux:  $(Build.ArtifactStagingDirectory)'
+              packageForLinux: '$(Build.ArtifactStagingDirectory)'
